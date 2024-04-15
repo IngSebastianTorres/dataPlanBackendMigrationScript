@@ -38,11 +38,11 @@ responseGeneralObject = ResponseGeneralObject
 def connectionDB():
     print("Connecting with Database")
     mydb = mysql.connector.connect(
-        host="192.168.1.13",
-        port="3306",  
+        host="devosfernando.com",
+        port="9999",  
         user="lra",
-        password="1234",
-        database="planbackend-local"
+        password="ARQ2023LRA",
+        database="planbackend"
     )
     print(mydb)
     return mydb
@@ -163,7 +163,7 @@ def jsonStandardObj(iterationRow):
         global yearsCopy
         yearsCopy=years.copy()
         clearMonthListValues()     
-    elif day.date == '04/04/2024':
+    elif day.date ==  '04/11/2024':
         monthsCopy2024=createCopyObjMonthsPerYear(day.date[6:])
         year = Years(day.date[6:11],monthsCopy2024)
         yearsCopy.append(year)
