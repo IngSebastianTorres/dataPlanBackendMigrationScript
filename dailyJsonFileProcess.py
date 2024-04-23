@@ -1,9 +1,6 @@
 import mysql.connector
 from datetime import datetime,date
-import json
 
-import model.Days
-import model.Months
 import model.ResponseGeneralObject
 import model.Years
 import model.Data
@@ -13,6 +10,9 @@ from model.Months import Months
 from model.Years import Years
 from model.Data import Data
 from model.ResponseGeneralObject import ResponseGeneralObject
+from utils.Notifications import send_push_notification
+from utils.bashLinuxOperations import execute_shell_to_commit_push_jsonkpifile
+
 
 print("__name__ value: ", __name__)
 
@@ -154,7 +154,7 @@ def jsonStandardObj(iterationRow):
     m="0"+str(m)
     d = str(d)
     dateToCompare=m+"/"+d+"/"+y
-    print(dateToCompare)
+    #print(dateToCompare)
     
     if day.date == '12/31/2023':
         monthsCopy2023=createCopyObjMonthsPerYear(day.date[6:])
@@ -163,7 +163,7 @@ def jsonStandardObj(iterationRow):
         global yearsCopy
         yearsCopy=years.copy()
         clearMonthListValues()     
-    elif day.date ==  '04/11/2024':
+    elif day.date ==  dateToCompare:
         monthsCopy2024=createCopyObjMonthsPerYear(day.date[6:])
         year = Years(day.date[6:11],monthsCopy2024)
         yearsCopy.append(year)
@@ -234,13 +234,29 @@ def createCopyObjMonthsPerYear(year):
 def main():
     print("Start process to get data from history database Master")
     mydb=connectionDB()
-    getAndProcessData(databaseconnection=mydb)
-    writeOutPutFile()
+    try:
+        getAndProcessData(databaseconnection=mydb)
+        writeOutPutFile()
+        execute_shell_to_commit_push_jsonkpifile();
+        sendNotification()
+        print("Proceso terminado satisfactoriamente")
+    except Exception as e:
+        print("Fallo en el proceso de extracción, transformación y cargue de tabla History", e )    
    
 def writeOutPutFile():
     f = open("dataKPIGeneralProd.json","w+")
     f.write(responseGeneralObject.toJSON())
     f.close()
+
+def sendNotification():
+    try:
+        print("Enviando notificaciones a todos los usuarios ...")
+        send_push_notification()
+        print("Notificaciones enviadas")
+    except Exception as e:
+        print("Fallo enviando las notificaciones a todos los usuarios", e)
+
+
 
 if __name__ == '__main__':
     main()

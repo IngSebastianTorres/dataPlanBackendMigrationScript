@@ -19,4 +19,4 @@ class ResponseGeneralObject:
             "status": self.status,
             "message": self.message,
             "response": self.response.to_dict()
-        }, sort_keys=True, indent=4)
+        }, sort_keys=True, indent=2)
