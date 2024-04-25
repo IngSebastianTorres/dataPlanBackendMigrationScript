@@ -236,14 +236,14 @@ def main():
     mydb=connectionDB()
     try:
         getAndProcessData(databaseconnection=mydb)
-        writeOutPutFile()
+        write_out_put_file()
         execute_shell_to_commit_push_jsonkpifile();
         sendNotification()
         print("Proceso terminado satisfactoriamente")
     except Exception as e:
         print("Fallo en el proceso de extracción, transformación y cargue de tabla History", e )    
    
-def writeOutPutFile():
+def write_out_put_file():
     f = open("dataKPIGeneralProd.json","w+")
     f.write(responseGeneralObject.toJSON())
     f.close()
