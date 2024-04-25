@@ -77,7 +77,7 @@ def getAndProcessData(databaseconnection):
     #Calculate date from 1st january on last year
     dateToQuery = calculateDateFromGetData()
     
-    print(date.today().isoformat()   )
+    #print(date.today().isoformat()   )
     # Primary data to get all values from dataset history table and segment the information on lists
     mycursor = databaseconnection.cursor()
     sql="SELECT * FROM history WHERE hist_date BETWEEN "+"'"+dateToQuery+"'" +" AND "+"'"+date.today().isoformat()+"'"  
