@@ -1,5 +1,5 @@
 import mysql.connector
-from datetime import datetime,date
+from datetime import datetime,date,timedelta
 
 import model.ResponseGeneralObject
 import model.Years
@@ -38,8 +38,8 @@ responseGeneralObject = ResponseGeneralObject
 def connectionDB():
     print("Connecting with Database")
     mydb = mysql.connector.connect(
-        host="devosfernando.com",
-        port="9999",  
+        host="172.21.0.3",
+        port="3306",  
         user="lra",
         password="ARQ2023LRA",
         database="planbackend"
@@ -146,16 +146,28 @@ def jsonStandardObj(iterationRow):
     m=today.isoformat()[5:7]
     d=today.isoformat()[8:10]
 
-    y= int(y)
+    y=int(y)
     m=int(m)
-    d = int(d)-1
+    if d == "01":
+     this_first = date.today().replace(day=1)
+     global prev_last_daymonth
+     prev_last_daymonth = this_first - timedelta(days=1)
+     prev_last_daymonth= prev_last_daymonth.strftime("%m/%d/%Y")
+    else: 
+     if d>="11":
+        d = int(d)-1
+     else:
+        d = int(d)-1
+        d = "0"+str(d)
 
     y=str(y)
     m="0"+str(m)
     d = str(d)
-    dateToCompare=m+"/"+d+"/"+y
-    #print(dateToCompare)
-    
+    if d == "01":
+        dateToCompare=prev_last_daymonth
+    else:
+        dateToCompare=m+"/"+d+"/"+y
+            
     if day.date == '12/31/2023':
         monthsCopy2023=createCopyObjMonthsPerYear(day.date[6:])
         year = Years(day.date[6:11],monthsCopy2023)
